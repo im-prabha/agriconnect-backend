@@ -9,8 +9,8 @@ const app = express();
 
 // ✅ Allowed origins for CORS
 const allowedOrigins = [
-  "http://localhost:5173",                  // local frontend (Vite dev server)
-  "https://agriconnect-frontend.vercel.app" // deployed Vercel frontend (change to your actual URL)
+  "http://localhost:5173",                       // local frontend (Vite dev server)
+  "https://agriconnect-frontend-inky.vercel.app" // ✅ deployed Vercel frontend
 ];
 
 // Middleware
