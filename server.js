@@ -7,9 +7,27 @@ const cors = require('cors');
 
 const app = express();
 
+// ✅ Allowed origins for CORS
+const allowedOrigins = [
+  "http://localhost:5173",                  // local frontend (Vite dev server)
+  "https://agriconnect-frontend.vercel.app" // deployed Vercel frontend (change to your actual URL)
+];
+
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS policy: Not allowed by AgriConnect backend"));
+    }
+  },
+  credentials: true
+}));
 
 // ✅ Serve uploaded images
 app.use("/uploads", express.static("uploads"));
@@ -29,6 +47,7 @@ app.get('/', (req, res) => {
   res.send('AgriConnect Backend is working!');
 });
 
+// Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ MongoDB Connected');
@@ -39,4 +58,3 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => {
     console.error('❌ MongoDB Connection Error:', err);
   });
-//Updates
